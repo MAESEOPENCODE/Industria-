@@ -4031,45 +4031,7 @@ function buildPDF_IncoDocs(D, safetyTimer){
 
 // ── Service Worker ────────────────────────────────────────────
 if ('serviceWorker' in navigator) {
-    const SW_VER = 'carta-zumo-v1';
-    const swCode = `
-        const CACHE_NAME = '${SW_VER}';
-        const ASSETS = [
-            'https://joseantoniomunozleon3-ai.github.io/Industria-/',
-            'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/pdfmake.min.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.7/vfs_fonts.js',
-            'https://cdnjs.cloudflare.com/ajax/libs/signature_pad/4.1.7/signature_pad.umd.min.js'
-        ];
-        self.addEventListener('install', e => {
-            e.waitUntil(caches.open(CACHE_NAME).then(c =>
-                Promise.allSettled(ASSETS.map(u => c.add(u).catch(() => {})))
-            ));
-        });
-        self.addEventListener('activate', e => {
-            e.waitUntil(
-                caches.keys().then(keys => Promise.all(
-                    keys.filter(k => k !== CACHE_NAME).map(k => caches.delete(k))
-                )).then(() => self.clients.claim())
-            );
-        });
-        self.addEventListener('fetch', e => {
-            if (e.request.url.includes('googleapis.com') || e.request.url.includes('firebase')) return;
-            e.respondWith(
-                caches.match(e.request).then(cached => cached || fetch(e.request).then(res => {
-                    if (res && res.status === 200 && e.request.method === 'GET') {
-                        caches.open(CACHE_NAME).then(c => c.put(e.request, res.clone()));
-                    }
-                    return res;
-                }).catch(() => caches.match(e.request)))
-            );
-        });
-        self.addEventListener('message', e => {
-            if (e.data && e.data.type === 'SKIP_WAITING') self.skipWaiting();
-        });
-    `;
-
-    const swBlob = new Blob([swCode], { type: 'application/javascript' });
-    const swUrl  = URL.createObjectURL(swBlob);
+    const swUrl = './sw.js';
     let _pendingSW = null;
 
     window.addEventListener('load', () => {
