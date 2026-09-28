@@ -1185,23 +1185,24 @@ select {
             <button onclick="saveAsTemplate()" class="save-btn" style="width:100%;justify-content:center;margin-top:10px">Guardar como plantilla</button>
         </div></div>
 
-        <div class="block"><div class="bhead"><span class="btag r">1</span><span class="btitle">Remitente</span><span class="bsaved" id="bs-sender">✓ guardado</span></div><div class="bbody"><div class="fr"><textarea id="senderBlock" placeholder="Empresa Exportadora S.L.&#10;Calle Mayor, 45 – Nave 3&#10;41500 Sevilla&#10;España" rows="5"></textarea></div><div class="fr"><label for="senderNIF">NIF / CIF Remitente <span style="font-size:.6rem;color:var(--dim);font-weight:400">(Ley 9/2025 · DeCA)</span></label><input id="senderNIF" type="text" placeholder="B-12345678" oninput="this.value=this.value.toUpperCase();"/></div></div></div>
+        <div class="block"><div class="bhead"><span class="btag r">1</span><span class="btitle">Remitente / Cargador contractual</span><span class="bsaved" id="bs-sender">✓ guardado</span></div><div class="bbody"><div class="fr"><textarea id="senderBlock" placeholder="Empresa Exportadora S.L.&#10;Calle Mayor, 45 – Nave 3&#10;41500 Sevilla&#10;España" rows="5"></textarea></div><div class="fr"><label for="senderNIF">NIF / CIF Cargador contractual <span style="font-size:.6rem;color:var(--dim);font-weight:400">(Ley 9/2025 · DeCA)</span></label><input id="senderNIF" type="text" placeholder="B-12345678" oninput="this.value=this.value.toUpperCase();"/></div></div></div>
 
         <div class="block"><div class="bhead"><span class="btag b">2</span><span class="btitle">Consignatario</span></div><div class="bbody"><div class="qf-row" id="rcv-qf"></div><div class="fr"><textarea id="rcvBlock" placeholder="Importadora GmbH&#10;Industriestrasse, 12&#10;10115 Berlín&#10;Alemania" rows="5"></textarea></div><div style="text-align:right;margin-top:6px"><span class="qf-pill" onclick="saveRcvToAgenda()">+ Guardar en agenda</span></div></div></div>
 
         <div class="block"><div class="bhead"><span class="btag g">3 · 4 · 5</span><span class="btitle">Recogida y Entrega</span></div><div class="bbody">
             <div class="fr"><label for="placeLoading">Lugar de Carga</label><input id="placeLoading" type="text" placeholder="Polígono Industrial Norte, Sevilla"/></div>
             <div class="fr"><label for="placeDelivery">Lugar de Entrega</label><input id="placeDelivery" type="text" placeholder="Almacén Central, Berlín"/></div>
+            <div class="fr"><label for="dateTransport">Fecha de realización del transporte <span style="font-size:.6rem;color:var(--dim);font-weight:400">(Ley 9/2025 · DeCA)</span></label><input id="dateTransport" type="date"/></div>
             <div class="fr2">
                 <div class="fr"><label for="dateDelivery">Fecha Prevista Entrega</label><input id="dateDelivery" type="date"/></div>
                 <div class="fr"><label for="clientRef">Referencia Cliente</label><input id="clientRef" type="text" placeholder="PO-2024-XXX"/></div>
             </div>
         </div></div>
 
-        <div class="block"><div class="bhead"><span class="btag g">16</span><span class="btitle">Transportista</span><span class="bsaved" id="bs-carrier">✓ guardado</span></div><div class="bbody">
+        <div class="block"><div class="bhead"><span class="btag g">16</span><span class="btitle">Transportista efectivo</span><span class="bsaved" id="bs-carrier">✓ guardado</span></div><div class="bbody">
             <div class="qf-row" id="car-qf"></div>
             <div class="fr"><textarea id="carrierBlock" placeholder="Transportes García S.L.&#10;Calle Transporte, 8&#10;41007 Sevilla&#10;España" rows="5"></textarea></div>
-            <div class="fr"><label for="carrierNIF">NIF / CIF Transportista <span style="font-size:.6rem;color:var(--dim);font-weight:400">(Ley 9/2025 · DeCA)</span></label><input id="carrierNIF" type="text" placeholder="B-87654321" oninput="this.value=this.value.toUpperCase();"/></div>
+            <div class="fr"><label for="carrierNIF">NIF / CIF Transportista efectivo <span style="font-size:.6rem;color:var(--dim);font-weight:400">(Ley 9/2025 · DeCA)</span></label><input id="carrierNIF" type="text" placeholder="B-87654321" oninput="this.value=this.value.toUpperCase();"/></div>
             <div style="text-align:right;margin-top:6px"><span class="qf-pill" onclick="saveCarToAgenda()">+ Guardar transportista en agenda</span></div>
             <div class="divl"></div>
             <div class="ssep">Vehículo y Conductor</div>
@@ -1680,7 +1681,7 @@ const FIELDS = ['docNum','docDate','placeEmission','docsAnexos','senderBlock','r
     'placeLoading','placeDelivery','dateDelivery','clientRef','carrierBlock','driverName',
     'driverDNI','plateTractor','plateTrailer','senderInstr','freightTerms','codAmount',
     'observations','tipoDoc','freeline-1','freeline-2','eurosCargados','eurosDevueltos',
-    'pesoBruto','taraVehiculo','pesoNeto','senderNIF','carrierNIF'];
+    'pesoBruto','taraVehiculo','pesoNeto','senderNIF','carrierNIF','dateTransport'];
 
 window.collect = function() {
     const d = { savedAt: new Date().toISOString() };
@@ -1815,6 +1816,7 @@ window.loadDefaults = function() {
     if (cfg.senderNIF)  { sv('senderNIF',  cfg.senderNIF); sv('cfgSenderNIF', cfg.senderNIF); }
     if (cfg.carrierNIF) { sv('carrierNIF', cfg.carrierNIF); sv('cfgCarrierNIF', cfg.carrierNIF); }
     if (!gv('docDate')) sv('docDate', new Date().toISOString().split('T')[0]);
+    if (!gv('dateTransport')) sv('dateTransport', new Date().toISOString().split('T')[0]);
     if (!gv('docNum'))  sv('docNum', genDocNum());
     if (!gv('tipoDoc')) sv('tipoDoc', 'nacional');
     if (cfg.senderBlock || cfg.carrierBlock) showBadges(true);
@@ -1945,6 +1947,7 @@ window.newCMR = window.doNewCMR = function() {
     clearSig(); clearSigSender();
     sv('docNum', genDocNum());
     sv('docDate', new Date().toISOString().split('T')[0]);
+    sv('dateTransport', new Date().toISOString().split('T')[0]);
     window._activeTemplateName = '';
     const d = document.getElementById('pesoNetoDisplay'); if (d) d.textContent = '—';
     clearDraft(); tab('form'); toast('✓ Formulario limpio', 'ok');
@@ -2422,7 +2425,7 @@ window.renderHist = async function() {
 };
 
 window.loadRec = async id => { const all = await dbAll(STORE); const r = all.find(x => x.id == id); if (!r) return; fill(r); clearSig(); clearSigSender(); tab('form'); toast('✓ Documento cargado', 'ok'); };
-window.dupRec  = async id => { const all = await dbAll(STORE); const r = all.find(x => x.id == id); if (!r) return; const d = { ...r }; delete d.id; d.docDate = new Date().toISOString().split('T')[0]; d.savedAt = new Date().toISOString(); fill(d); sv('docNum', genDocNum()); clearSig(); clearSigSender(); tab('form'); toast('✓ Duplicado — cambia el albarán para actualizar el N.º', 'warn', 5000); };
+window.dupRec  = async id => { const all = await dbAll(STORE); const r = all.find(x => x.id == id); if (!r) return; const d = { ...r }; delete d.id; d.docDate = new Date().toISOString().split('T')[0]; d.dateTransport = new Date().toISOString().split('T')[0]; d.savedAt = new Date().toISOString(); fill(d); sv('docNum', genDocNum()); clearSig(); clearSigSender(); tab('form'); toast('✓ Duplicado — cambia el albarán para actualizar el N.º', 'warn', 5000); };
 window.regenPDF = async function(id) {
     const all = await dbAll(STORE); const r = all.find(x => x.id == id); if (!r) return;
     const chosenLayout = await _askPDFLayout(); if (!chosenLayout) return;
@@ -2464,7 +2467,7 @@ window.saveAsTemplate = async function() {
                          { label: 'Sobreescribir', cls: 'danger', fn: () => _tplOverwrite(existing.id) }]);
                     return;
                 }
-                data.templateName = name; data.templateClient = cli.trim(); data.savedAt = new Date().toISOString(); delete data.docNum; delete data.docDate;
+                data.templateName = name; data.templateClient = cli.trim(); data.savedAt = new Date().toISOString(); delete data.docNum; delete data.docDate; delete data.dateTransport;
                 await dbAdd(TPL, data); closeBS(); renderTemplates(); toast('✓ Plantilla guardada', 'ok');
             }}
         ]
@@ -2478,7 +2481,7 @@ window._tplOverwrite = async function(id) {
     delete data.sigDriver; delete data.sigSender;
     const name = window._pendingTplName || data.templateName || '';
     const cli  = window._pendingTplCli !== undefined ? window._pendingTplCli : (data.templateClient || '');
-    data.templateName = name; data.templateClient = cli; data.savedAt = new Date().toISOString(); delete data.docNum; delete data.docDate;
+    data.templateName = name; data.templateClient = cli; data.savedAt = new Date().toISOString(); delete data.docNum; delete data.docDate; delete data.dateTransport;
     await dbDel(TPL, id); await dbAdd(TPL, data); renderTemplates(); toast('✓ Plantilla sobreescrita', 'ok');
     delete window._pendingTplData; delete window._pendingTplName; delete window._pendingTplCli;
 };
@@ -2500,7 +2503,7 @@ window._tplRename = async function() {
                 const all = await dbAll(TPL);
                 const dup = all.find(t => (t.templateName || '').trim().toLowerCase() === newName.toLowerCase());
                 if (dup) { toast('Ese nombre también existe, elige otro', 'err', 4000); return; }
-                data.templateName = newName; data.savedAt = new Date().toISOString(); delete data.docNum; delete data.docDate;
+                data.templateName = newName; data.savedAt = new Date().toISOString(); delete data.docNum; delete data.docDate; delete data.dateTransport;
                 await dbAdd(TPL, data); closeBS(); renderTemplates(); toast(`✓ Plantilla guardada como "${newName}"`, 'ok');
                 delete window._pendingTplData; delete window._pendingTplName;
             }}
@@ -2509,14 +2512,14 @@ window._tplRename = async function() {
     setTimeout(() => { const inp = document.getElementById(inputId); if (inp) { inp.focus(); inp.select(); } }, 80);
 };
 
-window.loadTemplate   = async id => { const all = await dbAll(TPL); const tpl = all.find(x => x.id == id); if (!tpl) return; fill(tpl); sv('docNum', genDocNum()); sv('docDate', new Date().toISOString().split('T')[0]); window._activeTemplateName = tpl.templateName || ''; tab('form'); toast('✓ Plantilla cargada', 'ok'); };
+window.loadTemplate   = async id => { const all = await dbAll(TPL); const tpl = all.find(x => x.id == id); if (!tpl) return; fill(tpl); sv('docNum', genDocNum()); sv('docDate', new Date().toISOString().split('T')[0]); sv('dateTransport', new Date().toISOString().split('T')[0]); window._activeTemplateName = tpl.templateName || ''; tab('form'); toast('✓ Plantilla cargada', 'ok'); };
 window.updateTemplate = async function(id) {
     const all = await dbAll(TPL); const tpl = all.find(x => x.id == id); if (!tpl) return;
     showBS('Actualizar plantilla', `<p>Se sobreescribirá <b>${tpl.templateName}</b> con los datos actuales del formulario.</p>`,
         [{ label: 'Cancelar', cls: 'cancel', fn: closeBS },
          { label: 'Actualizar', cls: 'ok', fn: async () => {
              closeBS(); const data = collect(); delete data.sigDriver; delete data.sigSender;
-             data.templateName = tpl.templateName; data.savedAt = new Date().toISOString(); delete data.docNum; delete data.docDate;
+             data.templateName = tpl.templateName; data.savedAt = new Date().toISOString(); delete data.docNum; delete data.docDate; delete data.dateTransport;
              await dbDel(TPL, id); await dbAdd(TPL, data); renderTemplates(); toast('✓ Plantilla actualizada', 'ok');
          }}]
     );
@@ -2861,7 +2864,12 @@ function _decaQRCell(deca) {
 async function _decaSubirPDF(blob, deca) {
     if (!deca) return { ok:true };
     try {
-        if (blob.size > 4.5*1024*1024) toast('⚠ PDF DeCA pesa más de 4.5MB, revisa el contenido','err',5000);
+        if (blob.size > 5*1024*1024) {
+            toast('⚠ PDF DeCA supera 5 MB — no válido, no se publica','err',6000);
+            alert('El PDF pesa ' + (blob.size/1048576).toFixed(2) + ' MB. La Resolución de 5/6/2026 limita el DeCA a 5 MB, así que NO se ha publicado.\n\nReduce el tamaño (logo, sello o firma más pequeños) y vuelve a emitirlo.');
+            return { ok:false, error:new Error('PDF > 5 MB') };
+        }
+        if (blob.size > 4.5*1024*1024) toast('⚠ PDF DeCA cerca del límite de 5 MB','err',5000);
         const endpoint = window.SUPA_URL + '/storage/v1/object/' + window.SUPA_BUCKET + '/' + deca.fname;
         const key = window.SUPA_ANON_LEGACY || window.SUPA_KEY;
         const resp = await fetch(endpoint, {
@@ -2906,7 +2914,7 @@ async function _sharePDF(blob, fname, docNum, safetyTimer) {
     showOv(false);
     const url = URL.createObjectURL(blob);
     const rcv = (gv('rcvBlock')||'').split('\n')[0].trim();
-    const mailUrl = 'mailto:?subject=' + encodeURIComponent('CMR ' + docNum) + '&body=' + encodeURIComponent('Adjunto carta de porte ' + docNum + (rcv ? ' para ' + rcv : '') + '.\n\nGenerado con CMR Manager Pro.');
+    const mailUrl = 'mailto:?subject=' + encodeURIComponent('CMR ' + docNum) + '&body=' + encodeURIComponent('Adjunto carta de porte ' + docNum + (rcv ? ' para ' + rcv : '') + '.\n\nGenerado con Carta de Porte Zumo.');
 
     window._sharePDFBlob  = blob;
     window._sharePDFFname = fname;
@@ -3064,16 +3072,25 @@ async function generateCMR(){
     data._decaDefinitivo = decaDefinitivo;
     // Validar campos obligatorios DeCA si es definitivo
     if (decaDefinitivo) {
+        const _wSum = Array.from(document.querySelectorAll('[id^="gl-weight-"]')).reduce((a,el)=>a+(parseFloat(String(el.value||'').replace(',','.'))||0),0);
+        const _pesoOk = _wSum > 0 || (parseFloat(gv('pesoBruto'))||0) > 0;
         const DECA_REQUIRED = [
-            { id: 'senderNIF',    label: 'NIF Remitente / Cargador' },
-            { id: 'carrierNIF',   label: 'NIF Transportista efectivo' },
-            { id: 'plateTractor', label: 'Matrícula Tractora' },
+            { id: 'senderBlock',   label: 'Nombre y domicilio del cargador contractual' },
+            { id: 'senderNIF',     label: 'NIF Cargador contractual' },
+            { id: 'carrierBlock',  label: 'Nombre del transportista efectivo' },
+            { id: 'carrierNIF',    label: 'NIF Transportista efectivo' },
+            { id: 'plateTractor',  label: 'Matrícula del vehículo' },
+            { id: 'dateTransport', label: 'Fecha de realización del transporte' },
         ];
         const decaMissing = DECA_REQUIRED.filter(f => !gv(f.id));
+        if (!_pesoOk) {
+            decaMissing.push({ id: '_peso', label: 'Peso de la mercancía (kg)' });
+            document.querySelectorAll('[id^="gl-weight-"]').forEach(el => el.classList.add('field-error'));
+        }
         if (decaMissing.length) {
             decaMissing.forEach(f => { const el = document.getElementById(f.id); if (el) el.classList.add('field-error'); });
             tab('form');
-            setTimeout(() => document.getElementById(decaMissing[0].id)?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50);
+            setTimeout(() => (document.getElementById(decaMissing[0].id) || document.getElementById('goods-lines'))?.scrollIntoView({ behavior: 'smooth', block: 'center' }), 50);
             showBS(
                 '⚠ Faltan datos para el DeCA',
                 `<p style="margin-bottom:12px;color:var(--dim);font-size:.83rem">El Documento de Control Digital exige estos datos antes de emitirse como definitivo:</p>
@@ -3163,7 +3180,7 @@ function mergeSignatureAndSello(sigDataURL, selloDataURL, w, h) {
 function buildPDF(D,safetyTimer){
     const isNacional = D.tipoDoc === 'nacional';
     const num=D.docNum||'CMR-'+Date.now();
-    const dateStr=fmtD(D.docDate); const delivStr=fmtD(D.dateDelivery);
+    const dateStr=fmtD(D.docDate); const delivStr=fmtD(D.dateDelivery); const transStr=fmtD(D.dateTransport||D.docDate);
     const senderBlock=(D.senderBlock||'—')+(D.senderNIF?'\nNIF: '+D.senderNIF:''); const rcvBlock=D.rcvBlock||'—'; const carrierBlock=(D.carrierBlock||'—')+(D.carrierNIF?'\nNIF: '+D.carrierNIF:'');
 
     const copies = isNacional ? [
@@ -3179,11 +3196,11 @@ function buildPDF(D,safetyTimer){
 
     const tituloDocumento = isNacional ? 'CARTA DE PORTE NACIONAL' : 'CARTA DE PORTE INTERNACIONAL (CMR)';
     const subtituloLegal = isNacional
-        ? 'Ley 15/2009 del Contrato de Transporte Terrestre de Mercancías — Orden FOM/1882/2012'
+        ? 'Ley 15/2009 del Contrato de Transporte Terrestre de Mercancías — Orden FOM/2861/2012'
         : 'Convenio CMR Ginebra 1956 — Protocolo 5 julio 1978';
 
     const clausulasTexto = isNacional ? 
-        `Este contrato de transporte se rige por la Ley 15/2009, de 11 de noviembre, del contrato de transporte terrestre de mercancías, y la Orden FOM/1882/2012.
+        `Este contrato de transporte se rige por la Ley 15/2009, de 11 de noviembre, del contrato de transporte terrestre de mercancías, y la Orden FOM/2861/2012.
 1. El porteador responde de la pérdida total o parcial y de las averías desde la recepción hasta la entrega.
 2. La indemnización por pérdida o avería no excederá del valor de mercado de la mercancía o 1/3 del IPREM por kilogramo.
 3. El retraso en la entrega dará lugar a indemnización si se ha formulado reserva en el momento de la entrega.
@@ -3210,10 +3227,10 @@ function buildPDF(D,safetyTimer){
         // Cabecera del documento
         if(logoDataURL){ _copyItems.push({table:{widths:['auto','*','auto'],body:[[ {image:logoDataURL,width:40,height:24,margin:[6,3,3,3],border:[false,false,false,false]}, {stack:[{text:tituloDocumento,fontSize:10,bold:true,color:'#000'},{text:subtituloLegal,fontSize:5.5,color:'#555'},{text:'N.º '+num+'  ·  '+dateStr+(D.placeEmission?' — '+D.placeEmission:''),fontSize:7,color:'#333'}],border:[false,false,false,false],margin:[0,3,0,3]}, {stack:[{text:cp.lbl,fontSize:8.5,bold:true,color:STRIPE,alignment:'right'},{text:cp.sub,fontSize:5.5,color:'#555',alignment:'right'},...refLine],border:[false,false,false,false],margin:[0,3,4,3]} ]]},layout:'noBorders',margin:[0,0,0,1]}); } else { _copyItems.push({table:{widths:['*','auto'],body:[[ {stack:[{text:tituloDocumento,fontSize:11,bold:true,color:'#000'},{text:subtituloLegal,fontSize:5.5,color:'#555'},{text:'N.º '+num+'  ·  '+dateStr+(D.placeEmission?' — '+D.placeEmission:''),fontSize:7,color:'#333'}],border:[false,false,false,false],margin:[4,3,0,3]}, {stack:[{text:cp.lbl,fontSize:8.5,bold:true,color:STRIPE,alignment:'right'},{text:cp.sub,fontSize:5.5,color:'#555',alignment:'right'},...refLine],border:[false,false,false,false],margin:[0,3,4,3]} ]]},layout:'noBorders',margin:[0,0,0,1]}); }
         _copyItems.push(colorLine());
-        _copyItems.push({table:{widths:['*','*'],body:[[boxHdr(1,'Remitente · Sender',senderBlock),boxHdr(2,'Destinatario · Consignee',rcvBlock)]]},layout:lay,margin:[0,0,0,0]});
+        _copyItems.push({table:{widths:['*','*'],body:[[boxHdr(1,'Remitente / Cargador contractual · Sender',senderBlock),boxHdr(2,'Destinatario · Consignee',rcvBlock)]]},layout:lay,margin:[0,0,0,0]});
         _copyItems.push(colorLine());
         const spacer=(h)=>({text:'',margin:[0,h,0,0]});
-        _copyItems.push({table:{widths:['*','*','auto'],body:[[box(4,'Lugar de carga',D.placeLoading||'—'),(function(){const b=box(3,'Lugar de entrega',D.placeDelivery||'—'); b.stack.push(spacer(12)); return b;})(),box('','Fecha prev. entrega',delivStr)]]},layout:lay,margin:[0,0,0,0]});
+        _copyItems.push({table:{widths:['*','*','auto'],body:[[box(4,'Lugar de carga',D.placeLoading||'—'),(function(){const b=box(3,'Lugar de entrega',D.placeDelivery||'—'); b.stack.push(spacer(12)); return b;})(),box('','Fecha transporte / entrega prev.','Transp.: '+transStr+'\nEntrega: '+delivStr)]]},layout:lay,margin:[0,0,0,0]});
         _copyItems.push(colorLine());
         _copyItems.push({table:{widths:['*','auto'],body:[[box(5,'Docs. anexos / Albarán',D.docsAnexos||'—'),box(14,'Reembolso €',D.codAmount||'')]]},layout:lay,margin:[0,0,0,0]});
         const platesStr = [D.plateTractor,D.plateTrailer].filter(Boolean).join('  /  ') || '—';
@@ -3343,15 +3360,15 @@ function buildPDF(D,safetyTimer){
 
         _copyItems.push({table:{widths:['*','*','*'],body:[[sigSenderCell(),sigDriverCell(),sigConsCell()]]},layout:lay,margin:[0,0,0,4]});
 
-        const tituloClausulas = isNacional ? 'CLÁUSULAS LEGALES (Ley 15/2009 y Orden FOM/1882/2012)' : 'CLÁUSULAS DEL CONVENIO CMR';
-        const pieTexto = isNacional ? 'Documento generado conforme a la Ley 15/2009 y Orden FOM/1882/2012' : 'CMR Manager Pro  ·  Convenio CMR Ginebra 1956';
+        const tituloClausulas = isNacional ? 'CLÁUSULAS LEGALES (Ley 15/2009 y Orden FOM/2861/2012)' : 'CLÁUSULAS DEL CONVENIO CMR';
+        const pieTexto = isNacional ? 'Documento generado conforme a la Ley 15/2009 y Orden FOM/2861/2012' : 'Carta de Porte Zumo  ·  Convenio CMR Ginebra 1956';
         // ── DeCA: NIF + QR Ley 9/2025 ──
         const _deca = D._deca || null;
         const _hasNIF = D.senderNIF || D.carrierNIF;
         const _nifStack = [];
         if (_hasNIF) {
             _nifStack.push({text:'DATOS NORMATIVOS — Ley 9/2025 / DeCA',fontSize:5.5,bold:true,color:'#555',margin:[4,3,4,1]});
-            if (D.senderNIF)  _nifStack.push({text:'NIF Remitente: '+D.senderNIF,  fontSize:6.5,color:'#000',margin:[4,0,4,0]});
+            if (D.senderNIF)  _nifStack.push({text:'NIF cargador contractual: '+D.senderNIF,  fontSize:6.5,color:'#000',margin:[4,0,4,0]});
             if (D.carrierNIF) _nifStack.push({text:'NIF Transportista: '+D.carrierNIF,fontSize:6.5,color:'#000',margin:[4,0,4,2]});
         }
         const _nifCols = [];
@@ -3367,12 +3384,12 @@ function buildPDF(D,safetyTimer){
             layout:'noBorders',margin:[0,2,0,0]
         });
         _copyItems.push({table:{widths:['*'],body:[[{stack:[{text:tituloClausulas,fontSize:6,bold:true,color:'#000',margin:[4,3,4,2]},{text:clausulasTexto,fontSize:5.5,color:'#444',lineHeight:1.2,margin:[4,2,4,4]}],border:[true,true,true,true],fillColor:'#fff',margin:[0,0,0,0]}]]},layout:'noBorders',margin:[0,4,0,0]});
-        _copyItems.push({columns:[{text:(isNacional?'CARTA PORTE NAC. ':'CMR N.º ')+num+'  ·  '+dateStr+(D.placeEmission?' — '+D.placeEmission:''),fontSize:5.5,color:'#999'},{text:pieTexto,fontSize:5.5,color:'#bbb',alignment:'right'}],margin:[0,3,0,2]});
+        _copyItems.push({columns:[{text:(isNacional?'CARTA PORTE NAC. ':'CMR N.º ')+num+'  ·  '+dateStr+(D.placeEmission?' — '+D.placeEmission:'')+(D._deca?'  ·  Creado: '+new Date().toLocaleString('es-ES'):''),fontSize:5.5,color:'#999'},{text:pieTexto,fontSize:5.5,color:'#bbb',alignment:'right'}],margin:[0,3,0,2]});
         content.push({stack:_copyItems});
         if(ci<copies.length-1) content.push({text:'',pageBreak:'after'});
     });
     try{
-        pdfMake.createPdf({pageSize:'A4',pageMargins:[18,6,18,4],compress:false,content,defaultStyle:{font:'Roboto',fontSize:10,color:'#111'},info:{title:(isNacional?'Carta Porte Nacional ':'CMR ')+num,author:'CMR Manager Pro',subject:isNacional?'Carta de Porte Nacional':'Carta de Porte Internacional CMR'}}).getBlob(blob=>{
+        pdfMake.createPdf({pageSize:'A4',pageMargins:[18,6,18,4],compress:true,content,defaultStyle:{font:'Roboto',fontSize:10,color:'#111'},info:{title:(isNacional?'Carta Porte Nacional ':'CMR ')+num,author:'Carta de Porte Zumo',creationDate:new Date(),modDate:new Date(),subject:isNacional?'Carta de Porte Nacional':'Carta de Porte Internacional CMR'}}).getBlob(blob=>{
             clearTimeout(safetyTimer);showOv(false);
             const fname=(isNacional?'CARTA_PORTE_NAC_':'CMR_')+num.replace(/[^a-z0-9]/gi,'_')+'.pdf';
             _sharePDF(blob, fname, num, safetyTimer);
@@ -3516,7 +3533,7 @@ function buildPDF_Classic(D, safetyTimer){
         const stipul  = D.specialStipulations||'';
         const succ    = D.successiveCarriers&&D.successiveCarriers.length
             ? D.successiveCarriers.map(s=>s.name+(s.address?'\n'+s.address:'')).join('\n'):'';
-        const loadDate= load+(dateS?'\n'+dateS:'');
+        const loadDate= load+((fmt(D.dateTransport)||dateS)?'\n'+(fmt(D.dateTransport)||dateS):'');
         const carrFull= carrier;
 
         const gl    = D.goodsLines&&D.goodsLines.length?D.goodsLines:[{}];
@@ -3798,7 +3815,7 @@ function buildPDF_Classic(D, safetyTimer){
         // ── DeCA: NIF + QR Ley 9/2025 — Classic layout ──
         const _cDeca = D._deca || null;
         const _cNifItems = [];
-        if (D.senderNIF)  _cNifItems.push({text:'NIF Remitente: '+D.senderNIF,  fontSize:7,color:'#000',margin:[4,2,4,0]});
+        if (D.senderNIF)  _cNifItems.push({text:'NIF cargador contractual: '+D.senderNIF,  fontSize:7,color:'#000',margin:[4,2,4,0]});
         if (D.carrierNIF) _cNifItems.push({text:'NIF Transportista: '+D.carrierNIF,fontSize:7,color:'#000',margin:[4,0,4,2]});
         const _cNifCols = [];
         if (_cNifItems.length) {
@@ -3824,10 +3841,10 @@ function buildPDF_Classic(D, safetyTimer){
 
     try{
         pdfMake.createPdf({
-            pageSize:'A4', pageMargins:[20,16,20,8], compress:false,
+            pageSize:'A4', pageMargins:[20,16,20,8], compress:true,
             content:allContent,
             defaultStyle:{font:'Roboto',fontSize:9,color:'#111'},
-            info:{title:'CMR '+num,author:'CMR Manager Pro',subject:'Carta de Porte Internacional CMR'}
+            info:{title:'CMR '+num,author:'Carta de Porte Zumo',creationDate:new Date(),modDate:new Date(),subject:'Carta de Porte Internacional CMR'}
         }).getBlob(blob=>{
             clearTimeout(safetyTimer); showOv(false);
             const fname='CMR_CLASSIC_'+num.replace(/[^a-z0-9]/gi,'_')+'.pdf';
@@ -3852,6 +3869,7 @@ function buildPDF_IncoDocs(D, safetyTimer){
     const fmt   = iso => { if(!iso) return ''; try{ return new Date(iso).toLocaleDateString('es-ES',{day:'2-digit',month:'2-digit',year:'numeric'})} catch{return iso} };
     const dateS = fmt(D.docDate);
     const delivS= fmt(D.dateDelivery);
+    const transS= fmt(D.dateTransport||D.docDate);
 
     const BLK = '#1a1009'; const LBL = '#f0ece4'; const BDR = '#a09888';
     const ACC = '#c4421a'; const WH  = '#ffffff';
@@ -3881,7 +3899,7 @@ function buildPDF_IncoDocs(D, safetyTimer){
         // Cabecera
         const hdrRight = { stack:[
             {text:isNac?'CARTA DE PORTE NACIONAL':'INTERNATIONAL CONSIGNMENT NOTE (CMR)', fontSize:11, bold:true, color:WH, alignment:'right'},
-            {text:isNac?'Ley 15/2009 · Orden FOM/1882/2012':'CMR Convention Geneva 1956 · Protocol 1978', fontSize:6.5, color:'rgba(255,255,255,.65)', alignment:'right', margin:[0,3,0,5]},
+            {text:isNac?'Ley 15/2009 · Orden FOM/2861/2012':'CMR Convention Geneva 1956 · Protocol 1978', fontSize:6.5, color:'rgba(255,255,255,.65)', alignment:'right', margin:[0,3,0,5]},
             {text:'N.º '+num+(dateS?'  ·  '+dateS:''), fontSize:9, bold:true, color:WH, alignment:'right'},
             {text:cp.lbl, fontSize:7.5, color:'rgba(255,255,255,.8)', alignment:'right', margin:[0,4,0,0], bold:true},
         ], border:[false,false,false,false], margin:[0,6,8,8]};
@@ -3895,10 +3913,10 @@ function buildPDF_IncoDocs(D, safetyTimer){
         content.push({canvas:[{type:'rect',x:0,y:0,w:537,h:2.5,color:cp.color}], margin:[0,0,0,5]});
 
         // Remitente / Destinatario
-        content.push({table:{widths:['50%','50%'],body:[[field('1  Remitente / Sender',D.senderBlock||'',{fs:8,bold:true}),field('2  Destinatario / Consignee',D.rcvBlock||'',{fs:8,bold:true})]]},layout:lay,margin:[0,0,0,2]});
+        content.push({table:{widths:['50%','50%'],body:[[field('1  Remitente / Cargador contractual · Sender',D.senderBlock||'',{fs:8,bold:true}),field('2  Destinatario / Consignee',D.rcvBlock||'',{fs:8,bold:true})]]},layout:lay,margin:[0,0,0,2]});
 
         // Lugar entrega / carga / fecha
-        content.push({table:{widths:['50%','25%','25%'],body:[[field('3  Lugar de entrega / Place of Delivery',D.placeDelivery||''),field('4  Lugar de carga / Place of Loading',D.placeLoading||''),field('Fecha entrega prevista',delivS)]]},layout:lay,margin:[0,0,0,2]});
+        content.push({table:{widths:['50%','25%','25%'],body:[[field('3  Lugar de entrega / Place of Delivery',D.placeDelivery||''),field('4  Lugar de carga / Place of Loading',D.placeLoading||''),field('Fecha transporte / entrega prev.','Transp.: '+transS+'\nEntrega: '+(delivS||'—'))]]},layout:lay,margin:[0,0,0,2]});
 
         // Docs / Ref / Franqueo
         const freightStr=(D.freightTerms||'')+(D.codAmount?' — Reembolso: '+D.codAmount+' €':'');
@@ -3952,7 +3970,7 @@ function buildPDF_IncoDocs(D, safetyTimer){
 
         // Instrucciones / Estipulaciones / Emisión — anclado al fondo
         const cl = isNac
-            ? `Este contrato se rige por la Ley 15/2009 del contrato de transporte terrestre de mercancías y la Orden FOM/1882/2012. 1. El porteador responde de la pérdida total o parcial y de las averías desde la recepción hasta la entrega. 2. La indemnización por pérdida o avería no excederá del valor de mercado de la mercancía o 1/3 del IPREM por kilogramo. 3. El retraso en la entrega dará lugar a indemnización si se ha formulado reserva en el momento de la entrega. 4. Las reclamaciones prescribirán al año, salvo dolo o culpa grave (3 años). 5. El destinatario deberá manifestar las reservas en el momento de la entrega o dentro de los siete días siguientes. 6. La carta de porte deberá ser firmada por remitente, transportista y destinatario.`
+            ? `Este contrato se rige por la Ley 15/2009 del contrato de transporte terrestre de mercancías y la Orden FOM/2861/2012. 1. El porteador responde de la pérdida total o parcial y de las averías desde la recepción hasta la entrega. 2. La indemnización por pérdida o avería no excederá del valor de mercado de la mercancía o 1/3 del IPREM por kilogramo. 3. El retraso en la entrega dará lugar a indemnización si se ha formulado reserva en el momento de la entrega. 4. Las reclamaciones prescribirán al año, salvo dolo o culpa grave (3 años). 5. El destinatario deberá manifestar las reservas en el momento de la entrega o dentro de los siete días siguientes. 6. La carta de porte deberá ser firmada por remitente, transportista y destinatario.`
             : `Este contrato se rige por el Convenio CMR (Ginebra, 19 mayo 1956) y el Protocolo de 5 julio 1978. 1. El transportista responde de la pérdida total o parcial y de las averías desde la recepción hasta la entrega. 2. La indemnización no excederá de 8,33 DEG por kilogramo de peso bruto faltante. 3. El retraso sólo dará lugar a indemnización si se ha formulado reserva por escrito. 4. Las reclamaciones deberán dirigirse al transportista en el plazo de 1 año (3 años en caso de dolo o culpa grave). 5. Los daños no derivados de pérdida o avería se limitan al importe del porte. 6. El destinatario deberá manifestar reservas por escrito en el momento de la entrega o a más tardar en los 7 días siguientes.`;
         const sigH=58;
 
@@ -3996,7 +4014,7 @@ function buildPDF_IncoDocs(D, safetyTimer){
                 // Pie
                 {columns:[
                     {text:(isNac?'CARTA PORTE ':'CMR N.º ')+num+(dateS?'  ·  '+dateS:'')+(D.placeEmission?'  ·  '+D.placeEmission:''),fontSize:6,color:'#b0a090'},
-                    {text:'CMR Manager Pro  ·  Generado digitalmente',fontSize:6,color:'#b0a090',alignment:'right'}
+                    {text:'Carta de Porte Zumo  ·  Generado digitalmente'+(D._deca?'  ·  Creado: '+new Date().toLocaleString('es-ES'):''),fontSize:6,color:'#b0a090',alignment:'right'}
                 ],margin:[0,3,0,0]}
             ]
         };
@@ -4008,9 +4026,9 @@ function buildPDF_IncoDocs(D, safetyTimer){
 
     try{
         pdfMake.createPdf({
-            pageSize:'A4',pageMargins:[16,10,16,8],compress:false,content:allContent,
+            pageSize:'A4',pageMargins:[16,10,16,8],compress:true,content:allContent,
             defaultStyle:{font:'Roboto',fontSize:9,color:BLK},
-            info:{title:(isNac?'Carta Porte ':'CMR ')+num,author:'CMR Manager Pro'}
+            info:{title:(isNac?'Carta Porte ':'CMR ')+num,author:'Carta de Porte Zumo',creationDate:new Date(),modDate:new Date()}
         }).getBlob(blob=>{
             clearTimeout(safetyTimer);showOv(false);
             const fname='CMR_INCODOCS_'+num.replace(/[^a-z0-9]/gi,'_')+'.pdf';
